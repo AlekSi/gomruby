@@ -5,12 +5,13 @@ test:
 	go tool vet .
 	LD_LIBRARY_PATH=`pwd` go test -v -gocheck.v
 
-rebuild_mruby:
+common:
 	cd mruby && git clean -xdf && make
+	go get -u launchpad.net/gocheck
 
-linux: rebuild_mruby
+linux: common
 	ld --whole-archive -shared -o libmruby.so mruby/build/host/lib/libmruby.a
 
-mac: rebuild_mruby
+mac: common
 	# Explodes. -force_load? -all_load?
 	ld -dylib -o libmruby.dylib mruby/build/host/lib/libmruby.a
