@@ -128,12 +128,12 @@ func (m *MRuby) inspect(v C.mrb_value) string {
 	return C.GoString(cs)
 }
 
-type MRubyLoadContext struct {
+type LoadContext struct {
 	context *C.mrbc_context
 	m       *MRuby
 }
 
-func (m *MRuby) NewLoadContext(filename string) (context *MRubyLoadContext) {
+func (m *MRuby) NewLoadContext(filename string) (context *LoadContext) {
 	ctx := C.mrbc_context_new(m.state)
 	if ctx == nil {
 		panic(errors.New("gomruby bug: failed to create mruby context"))
@@ -145,11 +145,11 @@ func (m *MRuby) NewLoadContext(filename string) (context *MRubyLoadContext) {
 		C.free(unsafe.Pointer(fn))
 	}
 
-	context = &MRubyLoadContext{ctx, m}
+	context = &LoadContext{ctx, m}
 	return
 }
 
-func (c *MRubyLoadContext) Delete() {
+func (c *LoadContext) Delete() {
 	if c.context != nil {
 		C.mrbc_context_free(c.m.state, c.context)
 		c.m = nil
@@ -157,7 +157,7 @@ func (c *MRubyLoadContext) Delete() {
 	}
 }
 
-func (c *MRubyLoadContext) Load(code string, args ...interface{}) (res interface{}, err error) {
+func (c *LoadContext) Load(code string, args ...interface{}) (res interface{}, err error) {
 	l := len(args)
 	ARGV := C.mrb_ary_new_capa(c.m.state, C.mrb_int(l))
 	for i := 0; i < l; i++ {

@@ -12,7 +12,7 @@ func TestGoMRuby(t *testing.T) { TestingT(t) }
 
 type F struct {
 	m *MRuby
-	c *MRubyLoadContext
+	c *LoadContext
 }
 
 var _ = Suite(&F{})
