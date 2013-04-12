@@ -70,6 +70,12 @@ rescue => e
 	c.Check(err, DeepEquals, errors.New("SyntaxError: syntax error"))
 }
 
+func (f *F) TestLoadMore(c *C) {
+	res, err := f.c.Load("ARGV.map { |x| x * x }", 1, 2, 3)
+	c.Check(err, IsNil)
+	c.Check(res, DeepEquals, []interface{}{1, 4, 9})
+}
+
 func (f *F) TestLoadContext(c *C) {
 	res, err := f.c.Load(`$global = 1; local = 2`)
 	c.Check(res, Equals, 2)
