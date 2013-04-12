@@ -15,17 +15,19 @@ import (
 )
 
 var (
-	inspectCS, argvCS *C.char
+	inspectCS, argvCS, goCS *C.char
 )
 
 func init() {
 	inspectCS = C.CString("inspect")
 	argvCS = C.CString("ARGV")
+	goCS = C.CString("Go")
 }
 
 // VM.
 type MRuby struct {
 	state *C.mrb_state
+	goM   *C.struct_RClass
 }
 
 // Creates new VM. Panics if it's not possible.
@@ -34,7 +36,13 @@ func New() *MRuby {
 	if state == nil {
 		panic(errors.New("gomruby bug: failed to create mruby state"))
 	}
-	return &MRuby{state}
+
+	m := C.mrb_define_module(state, goCS)
+	if m == nil {
+		panic(errors.New("gomruby bug: failed to create Go module"))
+	}
+
+	return &MRuby{state, m}
 }
 
 // Deletes VM.
