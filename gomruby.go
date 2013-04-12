@@ -136,6 +136,13 @@ func (m *MRuby) inspect(v C.mrb_value) string {
 	return C.GoString(cs)
 }
 
+// Define constant in Go module: Go::NAME.
+func (m *MRuby) DefineGoConst(name string, v interface{}) {
+	cs := C.CString(name)
+	defer C.free(unsafe.Pointer(cs))
+	C.mrb_define_const(m.state, m.goM, cs, m.mrubyValue(v))
+}
+
 type LoadContext struct {
 	context *C.mrbc_context
 	m       *MRuby
