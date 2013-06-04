@@ -1,2 +1,1 @@
-*.so
-*.dylib
+libmruby.a

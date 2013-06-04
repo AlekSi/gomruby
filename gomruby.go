@@ -3,7 +3,7 @@ package gomruby
 /*
 #include <gomruby.h>
 #cgo CFLAGS: -I. -Imruby/include
-#cgo LDFLAGS: -L. -lmruby -lm
+#cgo LDFLAGS: libmruby.a -lm
 */
 import "C"
 
