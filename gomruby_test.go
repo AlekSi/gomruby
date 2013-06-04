@@ -78,7 +78,7 @@ func (f *F) TestLoadLimits(c *C) {
 	c.ExpectFailure("conversion for large ints and floats is wrong")
 	res, err := f.c.Load(`4294967295`) // max uint32
 	c.Check(err, IsNil)
-	c.Check(res, Equals, 4294967295)
+	c.Check(res, Equals, uint32(4294967295))
 	// TODO more tests for edge values
 }
 
