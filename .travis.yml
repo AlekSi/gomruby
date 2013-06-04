@@ -1,3 +1,6 @@
 language: go
+before_install:
+  - go version
+  - go env
 install: cd $TRAVIS_BUILD_DIR && make linux
 script: cd $TRAVIS_BUILD_DIR && make
