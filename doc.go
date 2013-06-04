@@ -1,2 +1,2 @@
-// Package gomruby will allow you to embed mruby (mini Ruby) interpreter into Go.
+// Package gomruby embeds mruby (mini Ruby) VM into Go.
 package gomruby

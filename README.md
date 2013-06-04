@@ -1,7 +1,7 @@
 GoMRuby
 =======
 
-Embed mruby into Go.
+Package gomruby embeds mruby (mini Ruby) VM into Go.
 
 **Work-in-progress.** Come back a little bit later.
 

@@ -8,7 +8,9 @@ import (
 func Example() {
 	// create new VM instance and load context
 	mruby := gomruby.New()
+	defer mruby.Delete()
 	context := mruby.NewLoadContext("select.rb")
+	defer context.Delete()
 
 	// this is user-supplied code
 	userCode := `
