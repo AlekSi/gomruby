@@ -37,6 +37,9 @@ func (f *F) TestLoad(c *C) {
 	c.Check(must(f.c.Load(`true`)), Equals, true)
 	c.Check(must(f.c.Load(`false`)), Equals, false)
 	c.Check(must(f.c.Load(`1 + 1`)), Equals, 2)
+	c.Check(must(f.c.Load(`1 - 1`)), Equals, 0)
+	c.Check(must(f.c.Load(`1 - 2`)), Equals, -1)
+	c.Check(must(f.c.Load(`2147483647`)), Equals, 2147483647) // max int32
 	c.Check(must(f.c.Load(`3.14 + 42`)), Equals, 45.14)
 	c.Check(must(f.c.Load(`domain = "express" + "42" + ".com"`)), Equals, "express42.com")
 	c.Check(must(f.c.Load(`domain`)), Equals, "express42.com")
@@ -68,6 +71,14 @@ rescue => e
 `)
 	c.Check(res, Equals, nil)
 	c.Check(err, DeepEquals, errors.New("SyntaxError: syntax error"))
+}
+
+func (f *F) TestLoadLimits(c *C) {
+	c.ExpectFailure("conversion for large ints and floats is wrong")
+	res, err := f.c.Load(`4294967295`) // max uint32
+	c.Check(err, IsNil)
+	c.Check(res, Equals, 4294967295)
+	// TODO more tests for edge values
 }
 
 func (f *F) TestLoadMore(c *C) {

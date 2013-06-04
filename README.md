@@ -7,6 +7,7 @@ Embed mruby into Go.
 
 TODO
 ----
+* fix conversion of large ints and floats
 * static linking
 * Mac support
 * register Go types and objects in mruby
