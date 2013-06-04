@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func ExampleFilterLogs() {
+func Example() {
 	mruby := gomruby.New()
 	context := mruby.NewLoadContext("filter.rb")
 
