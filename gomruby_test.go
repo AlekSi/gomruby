@@ -43,6 +43,7 @@ func (f *F) TestLoad(c *C) {
 	c.Check(must(f.c.Load(`3.14 + 42`)), Equals, 45.14)
 	c.Check(must(f.c.Load(`domain = "express" + "42" + ".com"`)), Equals, "express42.com")
 	c.Check(must(f.c.Load(`domain`)), Equals, "express42.com")
+	c.Check(must(f.c.Load(`""`)), Equals, "")
 
 	slice := []interface{}{1, 3.14, "foo"}
 	hash := map[interface{}]interface{}{"foo": 1, 3.14: "bar"}
