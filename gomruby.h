@@ -6,6 +6,14 @@
 #include <mruby/array.h>
 #include <mruby/hash.h>
 
+#if defined(MRB_NAN_BOXING) || defined(MRB_WORD_BOXING)
+#   error "gomruby: boxing is not supported."
+#endif
+
+#if defined(MRB_INT16) || defined(MRB_INT64)
+#   error "gomruby: code assumes mrb_int == int32_t"
+#endif
+
 // mrb_fixnum is define, can't access it with cgo
 inline static int _gomruby_fixnum(mrb_value o) {
 	return mrb_fixnum(o);
