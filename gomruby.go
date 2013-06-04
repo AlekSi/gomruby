@@ -59,13 +59,18 @@ func (m *MRuby) mrubyValue(i interface{}) C.mrb_value {
 	case reflect.Invalid:
 		return C.mrb_nil_value() // mrb_undef_value() explodes
 	case reflect.Bool:
-		return C.mrb_bool_value(C.mrb_bool(v.Bool()))
+		b := v.Bool()
+		if b {
+			return C.mrb_true_value()
+		} else {
+			return C.mrb_false_value()
+		}
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		return C.mrb_fixnum_value(C.mrb_int(v.Int()))
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 		return C.mrb_fixnum_value(C.mrb_int(v.Uint()))
 	case reflect.Float32, reflect.Float64:
-		return C.mrb_float_value((C.mrb_float)(v.Float()))
+		return C.mrb_float_value((*C.struct_mrb_state)(m.state), C.mrb_float(v.Float()))
 	case reflect.String:
 		cs := C.CString(v.String())
 		defer C.free(unsafe.Pointer(cs))
