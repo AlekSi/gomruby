@@ -44,12 +44,12 @@ func (f *F) TestLoad(c *C) {
 	c.Check(must(f.c.Load(`3.14 + 42`)), Equals, 45.14)
 
 	// assumes typedef int32_t mrb_int
-	c.Check(must(f.c.Load(fmt.Sprintf("%d", math.MaxInt16))), Equals, math.MaxInt16)
-	c.Check(must(f.c.Load(fmt.Sprintf("%d", math.MaxUint16))), Equals, math.MaxUint16)
-	c.Check(must(f.c.Load(fmt.Sprintf("%d", math.MaxInt32))), Equals, math.MaxInt32)
-	c.Check(must(f.c.Load(fmt.Sprintf("%d", math.MaxUint32))), Equals, float64(math.MaxUint32))
-	// c.Check(must(f.c.Load(fmt.Sprintf("%d", math.MaxInt64))), Equals, float64(math.MaxInt64)) // FIXME
-	// TODO add math.MaxUint64
+	c.Check(must(f.c.Load(fmt.Sprintf("%d", int16(math.MaxInt16)))), Equals, math.MaxInt16)
+	c.Check(must(f.c.Load(fmt.Sprintf("%d", uint16(math.MaxUint16)))), Equals, math.MaxUint16)
+	c.Check(must(f.c.Load(fmt.Sprintf("%d", int32(math.MaxInt32)))), Equals, math.MaxInt32)
+	c.Check(must(f.c.Load(fmt.Sprintf("%d", uint32(math.MaxUint32)))), Equals, float64(math.MaxUint32))
+	// c.Check(must(f.c.Load(fmt.Sprintf("%d", int64(math.MaxInt64)))), Equals, float64(math.MaxInt64)) // FIXME
+	c.Check(must(f.c.Load(fmt.Sprintf("%d", uint64(math.MaxUint64)))), Equals, float64(math.MaxUint64))
 
 	c.Check(must(f.c.Load(`domain = "express" + "42" + ".com"`)), Equals, "express42.com")
 	c.Check(must(f.c.Load(`domain`)), Equals, "express42.com")
