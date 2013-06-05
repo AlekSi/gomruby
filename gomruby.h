@@ -10,8 +10,8 @@
 #   error "gomruby: boxing is not supported."
 #endif
 
-#if defined(MRB_INT16) || defined(MRB_INT64)
-#   error "gomruby: code assumes mrb_int == int32_t"
+#if defined(MRB_INT16)
+#   error "gomruby: code assumes mrb_int == int32_t or mrb_int == int64_t"
 #endif
 
 // mrb_fixnum is define, can't access it with cgo
