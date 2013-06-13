@@ -3,10 +3,14 @@ GoMRuby[![Build Status](https://secure.travis-ci.org/AlekSi/gomruby.png)](https:
 
 Package gomruby embeds mruby (mini Ruby) VM into Go.
 
-**Work-in-progress.** Come back a little bit later.
+[Documentation](http://godoc.org/github.com/AlekSi/gomruby).
 
-TODO
-----
-* fix conversion of large ints and floats
-* register Go types and objects in mruby
-* check syntax mode (c->no_exec = 1)
+Installation
+------------
+It's slightly more than just `go get`:
+
+    go get -d github.com/AlekSi/gomruby
+    cd $GOPATH/src/github.com/AlekSi/gomruby
+    make
+
+mruby is built statically, use gomruby as typical Go package.
