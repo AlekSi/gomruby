@@ -57,6 +57,7 @@ func (f *F) TestLoad(c *C) {
 	c.Check(must(f.c.Load(`domain = "express" + "42" + ".com"`)), Equals, "express42.com")
 	c.Check(must(f.c.Load(`domain`)), Equals, "express42.com")
 	c.Check(must(f.c.Load(`""`)), Equals, "")
+	c.Check(must(f.c.Load(`:symbol`)), Equals, Symbol("symbol"))
 
 	slice := []interface{}{1, 3.14, "foo"}
 	hash := map[interface{}]interface{}{"foo": 1, 3.14: "bar"}
@@ -71,6 +72,7 @@ func (f *F) TestLoad(c *C) {
 	c.Check(must(f.c.Load("ARGV.inspect", slice)), Equals, `[[1, 3.14, "foo"]]`)
 	c.Check(must(f.c.Load("ARGV.inspect", hash)), Equals, `[{3.14=>"bar", "foo"=>1}]`)
 	c.Check(must(f.c.Load("ARGV.inspect", mix)), Equals, `[[42, {3.14=>["bar"], "foo"=>1}]]`)
+	c.Check(must(f.c.Load("ARGV.inspect", Symbol("symbol"))), Equals, `[:symbol]`)
 
 	res, err := f.c.Load(`foo`)
 	c.Check(res, Equals, nil)

@@ -14,13 +14,17 @@ import (
 	"unsafe"
 )
 
+type Symbol string
+
 var (
 	inspectCS, argvCS *C.char
+	symbolT           reflect.Type
 )
 
 func init() {
 	inspectCS = C.CString("inspect")
 	argvCS = C.CString("ARGV")
+	symbolT = reflect.TypeOf(Symbol(""))
 }
 
 // mruby VM.
@@ -67,7 +71,11 @@ func (m *MRuby) mrubyValue(i interface{}) C.mrb_value {
 	case reflect.String:
 		cs := C.CString(v.String())
 		defer C.free(unsafe.Pointer(cs))
-		return C.mrb_str_new_cstr(m.state, cs)
+		if v.Type() == symbolT {
+			return C.mrb_check_intern_cstr(m.state, cs)
+		} else {
+			return C.mrb_str_new_cstr(m.state, cs)
+		}
 	case reflect.Array, reflect.Slice:
 		l := v.Len()
 		res := C.mrb_ary_new_capa(m.state, C.mrb_int(l))
@@ -104,6 +112,9 @@ func (m *MRuby) goValue(v C.mrb_value) interface{} {
 		return int(C._gomruby_fixnum(v))
 	case C.MRB_TT_FLOAT:
 		return float64(C._gomruby_float(v))
+	case C.MRB_TT_SYMBOL:
+		cs := C.mrb_string_value_ptr(m.state, v)
+		return Symbol(C.GoString(cs))
 	case C.MRB_TT_STRING:
 		cs := C.mrb_string_value_ptr(m.state, v)
 		return C.GoString(cs)
