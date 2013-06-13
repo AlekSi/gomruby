@@ -54,6 +54,11 @@ func (f *F) TestLoad(c *C) {
 	c.Check(must(f.c.Load(fmt.Sprintf("%d", int64(math.MaxInt64)))), Equals, float64(math.MaxInt64)+2048)
 	c.Check(must(f.c.Load(fmt.Sprintf("%d", uint64(math.MaxUint64)))), Equals, float64(math.MaxUint64))
 
+	// FIXME c.Check(must(f.c.Load(fmt.Sprintf("%f", math.SmallestNonzeroFloat32))), Equals, float64(math.SmallestNonzeroFloat32))
+	c.Check(must(f.c.Load(fmt.Sprintf("%f", math.MaxFloat32))), Equals, float64(math.MaxFloat32))
+	// FIXME c.Check(must(f.c.Load(fmt.Sprintf("%f", math.SmallestNonzeroFloat64))), Equals, float64(math.SmallestNonzeroFloat64))
+	c.Check(must(f.c.Load(fmt.Sprintf("%f", math.MaxFloat64))), Equals, float64(math.MaxFloat64))
+
 	c.Check(must(f.c.Load(`domain = "express" + "42" + ".com"`)), Equals, "express42.com")
 	c.Check(must(f.c.Load(`domain`)), Equals, "express42.com")
 	c.Check(must(f.c.Load(`""`)), Equals, "")
