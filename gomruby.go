@@ -15,21 +15,20 @@ import (
 )
 
 var (
-	inspectCS, argvCS, goCS *C.char
+	inspectCS, argvCS *C.char
 )
 
 func init() {
 	inspectCS = C.CString("inspect")
 	argvCS = C.CString("ARGV")
-	goCS = C.CString("Go")
 }
 
-// VM.
+// mruby VM.
 type MRuby struct {
 	state *C.mrb_state
 }
 
-// Creates new VM. Panics if it's not possible.
+// Creates new mruby VM. Panics if it's not possible.
 func New() *MRuby {
 	state := C.mrb_open()
 	if state == nil {
@@ -38,7 +37,7 @@ func New() *MRuby {
 	return &MRuby{state}
 }
 
-// Deletes VM.
+// Deletes mruby VM.
 func (m *MRuby) Delete() {
 	if m.state != nil {
 		C.mrb_close(m.state)
@@ -46,6 +45,7 @@ func (m *MRuby) Delete() {
 	}
 }
 
+// Converts Go value to mruby value.
 func (m *MRuby) mrubyValue(i interface{}) C.mrb_value {
 	v := reflect.ValueOf(i)
 	switch v.Kind() {
@@ -88,6 +88,7 @@ func (m *MRuby) mrubyValue(i interface{}) C.mrb_value {
 	panic(fmt.Errorf("gomruby bug: failed to convert Go value %#v (%T) to mruby value", i, i))
 }
 
+// Converts mruby value to Go value.
 func (m *MRuby) goValue(v C.mrb_value) interface{} {
 	switch v.tt {
 	case C.MRB_TT_UNDEF: // for example, result of syntax error
@@ -128,17 +129,20 @@ func (m *MRuby) goValue(v C.mrb_value) interface{} {
 	panic(fmt.Errorf("gomruby bug: failed to convert mruby value %#v to Go value", v))
 }
 
+// v.inspect()
 func (m *MRuby) inspect(v C.mrb_value) string {
 	v = C.mrb_funcall_argv(m.state, v, C.mrb_intern_cstr(m.state, inspectCS), 0, nil)
 	cs := C.mrb_string_value_ptr(m.state, v)
 	return C.GoString(cs)
 }
 
+// mruby VM load context.
 type LoadContext struct {
 	context *C.mrbc_context
 	m       *MRuby
 }
 
+// Creates new load context. Panics if it's not possible. Filename is used in error messages.
 func (m *MRuby) NewLoadContext(filename string) (context *LoadContext) {
 	ctx := C.mrbc_context_new(m.state)
 	if ctx == nil {
@@ -155,6 +159,7 @@ func (m *MRuby) NewLoadContext(filename string) (context *LoadContext) {
 	return
 }
 
+// Deletes load context.
 func (c *LoadContext) Delete() {
 	if c.context != nil {
 		C.mrbc_context_free(c.m.state, c.context)
@@ -163,6 +168,7 @@ func (c *LoadContext) Delete() {
 	}
 }
 
+// Loads mruby code. Arguments are exposed as ARGV array.
 func (c *LoadContext) Load(code string, args ...interface{}) (res interface{}, err error) {
 	l := len(args)
 	ARGV := C.mrb_ary_new_capa(c.m.state, C.mrb_int(l))
