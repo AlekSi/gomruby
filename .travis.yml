@@ -1,7 +1,9 @@
 language: go
+go:
+  - 1.1.1
 before_install:
   - sudo apt-get -q install gperf
   - go version
   - go env
-install: cd $TRAVIS_BUILD_DIR && make prepare
-script: cd $TRAVIS_BUILD_DIR && make
+install: make prepare
+script: make
