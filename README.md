@@ -8,7 +8,5 @@ Package gomruby embeds mruby (mini Ruby) VM into Go.
 TODO
 ----
 * fix conversion of large ints and floats
-* static linking
-* Mac support
 * register Go types and objects in mruby
 * check syntax mode (c->no_exec = 1)
