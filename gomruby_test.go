@@ -93,13 +93,6 @@ func (f *F) TestLoadMore(c *C) {
 	c.Check(res, DeepEquals, []interface{}{1, 4, 9})
 }
 
-func (f *F) TestDefineGoConst(c *C) {
-	f.m.DefineGoConst("MY_CONST", 42)
-	res, err := f.c.Load("Go::MY_CONST")
-	c.Check(err, IsNil)
-	c.Check(res, Equals, 42)
-}
-
 func (f *F) TestLoadContext(c *C) {
 	res, err := f.c.Load(`$global = 1; local = 2`)
 	c.Check(res, Equals, 2)

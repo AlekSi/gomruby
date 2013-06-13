@@ -27,7 +27,6 @@ func init() {
 // VM.
 type MRuby struct {
 	state *C.mrb_state
-	goM   *C.struct_RClass
 }
 
 // Creates new VM. Panics if it's not possible.
@@ -36,13 +35,7 @@ func New() *MRuby {
 	if state == nil {
 		panic(errors.New("gomruby bug: failed to create mruby state"))
 	}
-
-	m := C.mrb_define_module(state, goCS)
-	if m == nil {
-		panic(errors.New("gomruby bug: failed to create Go module"))
-	}
-
-	return &MRuby{state, m}
+	return &MRuby{state}
 }
 
 // Deletes VM.
@@ -139,13 +132,6 @@ func (m *MRuby) inspect(v C.mrb_value) string {
 	v = C.mrb_funcall_argv(m.state, v, C.mrb_intern_cstr(m.state, inspectCS), 0, nil)
 	cs := C.mrb_string_value_ptr(m.state, v)
 	return C.GoString(cs)
-}
-
-// Define constant in Go module: Go::NAME.
-func (m *MRuby) DefineGoConst(name string, v interface{}) {
-	cs := C.CString(name)
-	defer C.free(unsafe.Pointer(cs))
-	C.mrb_define_const(m.state, m.goM, cs, m.mrubyValue(v))
 }
 
 type LoadContext struct {
