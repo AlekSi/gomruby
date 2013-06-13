@@ -5,5 +5,4 @@ before_install:
   - sudo apt-get -q install gperf
   - go version
   - go env
-install: make prepare
 script: make
