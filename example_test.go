@@ -19,8 +19,7 @@ func Example() {
 
 	// define method
 	code := fmt.Sprintf(`
-		def select
-			message = ARGV[0]
+		def select(message)
 			%s
 		end`, userCode)
 	_, err := context.Load(code)
@@ -35,7 +34,8 @@ func Example() {
 		`1.2.3.3 - - [04/Jun/2013:18:02:03 +0000] host "GET /baz HTTP/1.0" 400`,
 		`1.2.3.4 - - [04/Jun/2013:18:02:04 +0000] host "GET /bzr HTTP/1.0" 500`,
 	} {
-		res, err := context.Load("select", message)
+		code := fmt.Sprintf("select(%q)", message)
+		res, err := context.Load(code)
 		if err != nil {
 			panic(err)
 		}
