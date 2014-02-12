@@ -11,4 +11,4 @@ libmruby.a:
 	-go get code.google.com/p/go.tools/cmd/vet
 
 clean:
-	rm libmruby.a
+	-rm libmruby.a
