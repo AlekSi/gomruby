@@ -1,4 +1,4 @@
-GoMRuby[![Build Status](https://secure.travis-ci.org/AlekSi/gomruby.png)](https://travis-ci.org/AlekSi/gomruby) [![Is maintained?](http://stillmaintained.com/AlekSi/gomruby.png)](http://stillmaintained.com/AlekSi/gomruby)
+GoMRuby[![Build Status](https://secure.travis-ci.org/AlekSi/gomruby.png?branch=develop)](https://travis-ci.org/AlekSi/gomruby) [![Is maintained?](http://stillmaintained.com/AlekSi/gomruby.png)](http://stillmaintained.com/AlekSi/gomruby)
 =======
 
 Package gomruby embeds mruby (mini Ruby) VM into Go.
