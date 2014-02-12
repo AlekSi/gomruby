@@ -8,6 +8,7 @@ libmruby.a:
 	cd mruby && git reset --hard && git clean -xdf && make
 	cp mruby/build/host/lib/libmruby.a .
 	go get launchpad.net/gocheck
+	-go get code.google.com/p/go.tools/cmd/vet
 
 clean:
 	rm libmruby.a
