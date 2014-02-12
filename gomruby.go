@@ -14,6 +14,7 @@ import (
 	"unsafe"
 )
 
+// Symbol represents mruby type symbol.
 type Symbol string
 
 var (
@@ -27,12 +28,12 @@ func init() {
 	symbolT = reflect.TypeOf(Symbol(""))
 }
 
-// mruby VM.
+// MRuby is the mruby VM.
 type MRuby struct {
 	state *C.mrb_state
 }
 
-// Creates new mruby VM. Panics if it's not possible.
+// New creates mruby VM. Panics if it's not possible.
 func New() *MRuby {
 	state := C.mrb_open()
 	if state == nil {
@@ -41,7 +42,7 @@ func New() *MRuby {
 	return &MRuby{state}
 }
 
-// Deletes mruby VM.
+// Delete deletes mruby VM.
 func (m *MRuby) Delete() {
 	if m.state != nil {
 		C.mrb_close(m.state)
