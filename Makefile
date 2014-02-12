@@ -5,7 +5,8 @@ all: libmruby.a
 
 libmruby.a:
 	git submodule update --init
-	cd mruby && git reset --hard && git clean -xdf && make
+	cd mruby && git reset --hard
+	cd mruby && git clean -xdf && make
 	cp mruby/build/host/lib/libmruby.a .
 	go get launchpad.net/gocheck
 	-go get code.google.com/p/go.tools/cmd/vet
