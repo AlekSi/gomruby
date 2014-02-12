@@ -60,7 +60,6 @@ func (f *F) TestLoad(c *C) {
 	c.Check(must(f.c.Load(fmt.Sprintf("%f", math.MaxFloat64))), Equals, float64(math.MaxFloat64))
 
 	c.Check(must(f.c.Load(`domain = "express" + "42" + ".com"`)), Equals, "express42.com")
-	c.Check(must(f.c.Load(`domain`)), Equals, "express42.com")
 	c.Check(must(f.c.Load(`""`)), Equals, "")
 	c.Check(must(f.c.Load(`:symbol`)), Equals, Symbol("symbol"))
 
