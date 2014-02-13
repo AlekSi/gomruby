@@ -18,6 +18,20 @@ import (
 // Symbol represents mruby type symbol.
 type Symbol string
 
+func (s Symbol) String() string {
+	return ":" + string(s)
+}
+
+func (s Symbol) GoString() string {
+	return ":" + string(s)
+}
+
+// check interfaces
+var (
+	_ fmt.Stringer   = Symbol("")
+	_ fmt.GoStringer = Symbol("")
+)
+
 var (
 	inspectCS, argvCS *C.char
 	symbolT           reflect.Type
