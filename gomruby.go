@@ -11,6 +11,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"runtime"
 	"unsafe"
 )
 
@@ -39,7 +40,9 @@ func New() *MRuby {
 	if state == nil {
 		panic(errors.New("gomruby bug: failed to create mruby state"))
 	}
-	return &MRuby{state}
+	m := &MRuby{state}
+	runtime.SetFinalizer(m, func(x *MRuby) { x.Delete() })
+	return m
 }
 
 // Delete deletes mruby VM.
@@ -168,6 +171,7 @@ func (m *MRuby) NewLoadContext(filename string) (context *LoadContext) {
 	}
 
 	context = &LoadContext{ctx, m}
+	runtime.SetFinalizer(context, func(x *LoadContext) { x.Delete() })
 	return
 }
 
