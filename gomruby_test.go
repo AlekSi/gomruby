@@ -100,28 +100,29 @@ func (f *F) TestLoadMore(c *C) {
 }
 
 func (f *F) TestLoadContext(c *C) {
-	res, err := f.c.Load(`$global = 1; local = 2`)
-	c.Check(res, Equals, 2)
-	c.Check(err, IsNil)
+	must := func(res interface{}, err error) interface{} {
+		c.Check(err, IsNil)
+		return res
+	}
+
+	must(f.c.Load(`$global = 1; @instance = 2; @@class = 3; local = 4`))
 
 	// state is preserved
-	res, err = f.c.Load(`$global`)
-	c.Check(res, Equals, 1)
-	c.Check(err, IsNil)
-	res, err = f.c.Load(`local`)
-	c.Check(res, Equals, 2)
-	c.Check(err, IsNil)
+	c.Check(must(f.c.Load(`$global`)), Equals, 1)
+	c.Check(must(f.c.Load(`@instance`)), Equals, 2)
+	c.Check(must(f.c.Load(`@@class`)), Equals, 3)
+	c.Check(must(f.c.Load(`local`)), Equals, 4)
 
 	c2 := f.m.NewLoadContext("test2.rb")
 	defer c2.Delete()
 
-	// global variable is accessible from other context
-	res, err = c2.Load(`$global`)
-	c.Check(res, Equals, 1)
-	c.Check(err, IsNil)
+	// global, instance and class variables are accessible from other context
+	c.Check(must(c2.Load(`$global`)), Equals, 1)
+	c.Check(must(c2.Load(`@instance`)), Equals, 2)
+	c.Check(must(c2.Load(`@@class`)), Equals, 3)
 
-	// local is not
-	res, err = c2.Load(`local`)
+	// local variable is not
+	res, err := c2.Load(`local`)
 	c.Check(res, Equals, nil)
 	c.Check(err, DeepEquals, errors.New("test2.rb:1: undefined method 'local' for main (NoMethodError)"))
 }
