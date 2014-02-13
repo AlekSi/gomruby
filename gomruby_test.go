@@ -105,9 +105,10 @@ func (f *F) TestLoadContext(c *C) {
 		return res
 	}
 
-	must(f.c.Load(`$global = 1; @instance = 2; @@class = 3; local = 4`))
+	must(f.c.Load(`CONST = 0; $global = 1; @instance = 2; @@class = 3; local = 4`))
 
 	// state is preserved
+	c.Check(must(f.c.Load(`CONST`)), Equals, 0)
 	c.Check(must(f.c.Load(`$global`)), Equals, 1)
 	c.Check(must(f.c.Load(`global_variables`)).([]interface{})[0], Equals, Symbol("$global"))
 	c.Check(must(f.c.Load(`@instance`)), Equals, 2)
@@ -120,7 +121,8 @@ func (f *F) TestLoadContext(c *C) {
 	c2 := f.m.NewLoadContext("test2.rb")
 	defer c2.Delete()
 
-	// global, instance and class variables are accessible from other context
+	// constants, global, instance and class variables are accessible from other context
+	c.Check(must(c2.Load(`CONST`)), Equals, 0)
 	c.Check(must(c2.Load(`$global`)), Equals, 1)
 	c.Check(must(c2.Load(`@instance`)), Equals, 2)
 	c.Check(must(c2.Load(`@@class`)), Equals, 3)
