@@ -131,10 +131,10 @@ func (f *F) TestLoadContext(c *C) {
 	c.Check(err, DeepEquals, errors.New("test2.rb:1: undefined method 'local' for main (NoMethodError)"))
 }
 
-func (f *F) TestBugRb(c *C) {
+func (f *F) TestTestRb(c *C) {
 	b, err := ioutil.ReadFile("test.rb")
 	c.Assert(err, IsNil)
 	res, err := f.c.Load(string(b))
-	c.Logf("%#v", res)
+	c.Logf("test.rb result: %#v", res)
 	c.Check(err, IsNil)
 }
