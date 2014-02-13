@@ -109,9 +109,13 @@ func (f *F) TestLoadContext(c *C) {
 
 	// state is preserved
 	c.Check(must(f.c.Load(`$global`)), Equals, 1)
+	c.Check(must(f.c.Load(`global_variables`)).([]interface{})[0], Equals, Symbol("$global"))
 	c.Check(must(f.c.Load(`@instance`)), Equals, 2)
+	c.Check(must(f.c.Load(`instance_variables`)), DeepEquals, []interface{}{Symbol("@instance")})
 	c.Check(must(f.c.Load(`@@class`)), Equals, 3)
+	c.Check(must(f.c.Load(`self.class.class_variables`)), DeepEquals, []interface{}{Symbol("@@class")})
 	c.Check(must(f.c.Load(`local`)), Equals, 4)
+	// "local_variables" method is not implemented in mruby yet
 
 	c2 := f.m.NewLoadContext("test2.rb")
 	defer c2.Delete()
